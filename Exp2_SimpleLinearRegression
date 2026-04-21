@@ -1,0 +1,78 @@
+# IMPORTS
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# LOAD DATA
+df = pd.read_csv("advertising.csv")
+
+# DATA CLEANING
+print(df.isnull().sum())
+print(df.duplicated().sum())
+df = df.drop_duplicates()
+
+print(df.describe())
+
+# VISUALIZATION
+plt.figure(figsize=(8,6))
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm")
+plt.show()
+
+df.mean().plot(kind='bar')
+plt.show()
+
+plt.scatter(df['TV'], df['Sales'])
+plt.xlabel("TV")
+plt.ylabel("Sales")
+plt.show()
+
+# SIMPLE LINEAR REGRESSION (FORMULA)
+
+X = df['TV'].values
+Y = df['Sales'].values
+
+mean_x = np.mean(X)
+mean_y = np.mean(Y)
+
+num = np.sum((X - mean_x)*(Y - mean_y))
+den = np.sum((X - mean_x)**2)
+
+m = num / den
+c = mean_y - m * mean_x
+
+print("Slope:", m)
+print("Intercept:", c)
+
+Y_pred = m*X + c
+
+# PLOT LINE
+plt.scatter(X, Y)
+plt.plot(X, Y_pred)
+plt.show()
+
+# EVALUATION
+mse = np.mean((Y - Y_pred)**2)
+rmse = np.sqrt(mse)
+r2 = 1 - (np.sum((Y - Y_pred)**2) / np.sum((Y - mean_y)**2))
+
+print("MSE:", mse)
+print("RMSE:", rmse)
+print("R2:", r2)
+
+# USING SKLEARN
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+X = df[['TV']]
+Y = df['Sales']
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, Y_train)
+
+Y_pred = model.predict(X_test)
+
+print("Slope:", model.coef_)
+print("Intercept:", model.intercept_)
