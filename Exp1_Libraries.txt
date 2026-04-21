@@ -1,0 +1,43 @@
+# IMPORTS
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# LOAD DATASET
+df = pd.read_csv("advertising.csv")
+
+# BASIC INFO
+print(df.head())
+print(df.tail())
+print(df.shape)
+print(df.columns)
+
+# DATA CLEANING
+print(df.isnull().sum())        # check nulls
+print(df.duplicated().sum())   # check duplicates
+df = df.drop_duplicates()
+
+print(df.info())
+print(df.describe())
+
+# VISUALIZATION
+
+# HEATMAP
+plt.figure(figsize=(8,6))
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm")
+plt.title("Correlation Heatmap")
+plt.show()
+
+# BAR GRAPH
+df.mean().plot(kind='bar')
+plt.title("Mean of Variables")
+plt.ylabel("Mean Value")
+plt.show()
+
+# SCATTER PLOT
+plt.scatter(df['TV'], df['Sales'])
+plt.xlabel("TV Advertising Budget")
+plt.ylabel("Sales")
+plt.title("TV vs Sales")
+plt.show()

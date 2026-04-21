@@ -1,0 +1,42 @@
+# IMPORTS
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud, STOPWORDS
+import nltk
+from nltk.corpus import stopwords
+import numpy as np
+
+nltk.download('stopwords')
+
+# TEXT
+text = """
+This product is amazing and excellent.
+The quality is good and the design is beautiful.
+However, the delivery was slow and packaging was bad.
+Overall the product is good and worth buying.
+"""
+
+# CLEANING
+stop_words = set(stopwords.words('english'))
+
+words = text.lower().split()
+filtered = [w for w in words if w not in stop_words]
+
+clean_text = " ".join(filtered)
+
+# WORD CLOUD
+wc = WordCloud(width=800, height=400, background_color='white').generate(clean_text)
+
+plt.imshow(wc)
+plt.axis('off')
+plt.show()
+
+# MASKED WORD CLOUD
+x, y = np.ogrid[:300, :300]
+mask = (x - 150)**2 + (y - 150)**2 > 130**2
+mask = 255 * mask.astype(int)
+
+wc2 = WordCloud(width=800, height=400, background_color='white', mask=mask).generate(clean_text)
+
+plt.imshow(wc2)
+plt.axis('off')
+plt.show()

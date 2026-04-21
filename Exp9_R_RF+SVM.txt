@@ -1,0 +1,42 @@
+# IMPORTS
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+from sklearn.metrics import confusion_matrix, accuracy_score
+
+# LOAD DATA
+from sklearn import datasets
+iris = datasets.load_iris()
+
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df['species'] = iris.target
+
+# CLEANING
+df = df.drop_duplicates()
+
+# MODEL
+X = df.drop('species', axis=1)
+y = df['species']
+
+# RANDOM FOREST
+rf = RandomForestClassifier()
+rf.fit(X, y)
+rf_pred = rf.predict(X)
+
+# SVM
+svm = SVC()
+svm.fit(X, y)
+svm_pred = svm.predict(X)
+
+# RESULTS
+print("RF Accuracy:", accuracy_score(y, rf_pred))
+print("SVM Accuracy:", accuracy_score(y, svm_pred))
+
+print(confusion_matrix(y, rf_pred))
+
+# VISUALIZATION
+sns.scatterplot(x=df.iloc[:,2], y=df.iloc[:,3], hue=df['species'])
+plt.show()

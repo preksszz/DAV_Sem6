@@ -1,0 +1,45 @@
+# IMPORTS
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from statsmodels.graphics.tsaplots import plot_acf
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+# LOAD DATA
+df = pd.read_csv("AirPassengers.csv")
+
+# DATA CLEANING
+df['Month'] = pd.to_datetime(df['Month'])
+df.set_index('Month', inplace=True)
+
+print(df.isnull().sum())
+
+# VISUALIZATION
+
+# LINE PLOT
+df.plot()
+plt.title("Passenger Trend")
+plt.show()
+
+# HISTOGRAM
+sns.histplot(df['Passengers'], kde=True)
+plt.show()
+
+# BOXPLOT
+sns.boxplot(y=df['Passengers'])
+plt.show()
+
+# SEASONAL PATTERN
+df['Month_num'] = df.index.month
+sns.boxplot(x='Month_num', y='Passengers', data=df)
+plt.show()
+
+# DECOMPOSITION
+result = seasonal_decompose(df['Passengers'], model='additive')
+result.plot()
+plt.show()
+
+# ACF
+plot_acf(df['Passengers'])
+plt.show()
